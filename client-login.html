@@ -35,10 +35,7 @@
   a{ color:var(--blue); }
   .hidden{ display:none !important; }
 
-  header{
-    border-bottom:1px solid var(--border);
-    background:#fff;
-  }
+  header{ border-bottom:1px solid var(--border); background:#fff; }
   .header-inner{
     max-width:1080px; margin:0 auto; padding:14px 24px;
     display:flex; align-items:center; justify-content:space-between;
@@ -55,7 +52,7 @@
     box-shadow:var(--shadow); padding:32px;
   }
   .card h1{ font-size:21px; font-weight:800; color:var(--navy); margin-bottom:6px; }
-  .card > p{ font-size:13.5px; color:var(--ink-soft); margin-bottom:24px; }
+  .card > p.sub{ font-size:13.5px; color:var(--ink-soft); margin-bottom:24px; }
 
   .field{ margin-bottom:14px; }
   .field label{ display:block; font-size:12.5px; font-weight:600; margin-bottom:5px; color:var(--ink-soft); }
@@ -71,12 +68,20 @@
   }
   .btn:hover{ background:var(--navy); }
   .btn:disabled{ opacity:.6; cursor:not-allowed; }
+  .btn-link{
+    background:none; border:none; color:var(--blue); font-size:12.5px; font-weight:600;
+    cursor:pointer; padding:0; text-decoration:underline; text-decoration-color:transparent;
+  }
+  .btn-link:hover{ text-decoration-color:currentColor; }
+  .toggle-row{ margin-top:16px; text-align:center; font-size:12.5px; color:var(--ink-soft); }
   .error-msg{ color:var(--bad); font-size:12.5px; margin-top:10px; }
+  .info-msg{
+    font-size:12.5px; color:var(--ink-soft); margin-top:10px;
+    background:var(--blue-tint); padding:9px 11px; border-radius:8px;
+  }
 
   /* ---- Result view ---- */
-  .result-head{
-    display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;
-  }
+  .result-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
   .result-head h1{ font-size:19px; }
   .logout-btn{
     background:none; border:1px solid var(--border); border-radius:8px;
@@ -84,10 +89,7 @@
   }
   .logout-btn:hover{ background:var(--paper); }
 
-  .pill{
-    display:inline-block; font-size:11.5px; font-weight:700;
-    padding:4px 11px; border-radius:999px;
-  }
+  .pill{ display:inline-block; font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:999px; }
   .pill.active{ background:var(--good-tint); color:var(--good); }
   .pill.expiring{ background:var(--warn-tint); color:var(--warn); }
   .pill.expired{ background:var(--bad-tint); color:var(--bad); }
@@ -131,22 +133,52 @@
 
 <div class="wrap">
 
-  <!-- ============ LOGIN ============ -->
+  <!-- ============ LOGIN (returning clients, email + password) ============ -->
   <div id="loginView" class="card">
     <h1>Client Login</h1>
-    <p>Enter the email and license key you received to view your license details.</p>
+    <p class="sub">Sign in with the email and password you set up.</p>
     <form id="loginForm">
       <div class="field">
-        <label for="emailInput">Email</label>
-        <input type="email" id="emailInput" placeholder="you@example.com" required autocomplete="email" autofocus />
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required autocomplete="email" autofocus />
       </div>
       <div class="field">
-        <label for="keyInput">License Key</label>
-        <input type="text" id="keyInput" placeholder="ASC-XXXX-XXXX-XXXX-XXXX" required style="text-transform:uppercase;" />
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" />
       </div>
-      <button type="submit" class="btn" id="loginBtn">View My License</button>
+      <button type="submit" class="btn" id="loginBtn">Sign In</button>
       <div class="error-msg hidden" id="loginError"></div>
     </form>
+    <div class="toggle-row">
+      <button type="button" class="btn-link" id="forgotBtn">Forgot password?</button>
+      &nbsp;·&nbsp;
+      <button type="button" class="btn-link" id="showActivateBtn">First time? Activate your account</button>
+    </div>
+  </div>
+
+  <!-- ============ ACTIVATE (first time, license key required once) ============ -->
+  <div id="activateView" class="card hidden">
+    <h1>Activate Your Account</h1>
+    <p class="sub">Enter the email and license key you received, then set a password — you'll use email + password to log in from now on.</p>
+    <form id="activateForm">
+      <div class="field">
+        <label for="activateEmail">Email</label>
+        <input type="email" id="activateEmail" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="activateKey">License Key</label>
+        <input type="text" id="activateKey" placeholder="ASC-XXXX-XXXX-XXXX-XXXX" required style="text-transform:uppercase;" />
+      </div>
+      <div class="field">
+        <label for="activatePassword">Set Password</label>
+        <input type="password" id="activatePassword" required minlength="6" autocomplete="new-password" />
+      </div>
+      <button type="submit" class="btn" id="activateBtn">Activate &amp; Set Password</button>
+      <div class="error-msg hidden" id="activateError"></div>
+    </form>
+    <div class="toggle-row">
+      <button type="button" class="btn-link" id="showLoginBtn">Already activated? Sign in</button>
+    </div>
   </div>
 
   <!-- ============ RESULT ============ -->
@@ -187,7 +219,11 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
-    getFirestore, doc, getDoc
+    getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+    sendPasswordResetEmail, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, collection, query, where, getDocs
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -200,13 +236,20 @@
   };
 
   const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
   const db = getFirestore(app);
 
   const loginView = document.getElementById('loginView');
+  const activateView = document.getElementById('activateView');
   const resultView = document.getElementById('resultView');
-  const loginForm = document.getElementById('loginForm');
-  const loginError = document.getElementById('loginError');
-  const loginBtn = document.getElementById('loginBtn');
+
+  function showOnly(view) {
+    [loginView, activateView, resultView].forEach((v) => v.classList.add('hidden'));
+    view.classList.remove('hidden');
+  }
+
+  document.getElementById('showActivateBtn').addEventListener('click', () => showOnly(activateView));
+  document.getElementById('showLoginBtn').addEventListener('click', () => showOnly(loginView));
 
   function fmtDate(iso) {
     return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -219,6 +262,19 @@
     if (expiry < now) return 'expired';
     if (expiry - now < 7 * 24 * 60 * 60 * 1000) return 'expiring';
     return 'active';
+  }
+
+  async function findLicenseByEmail(email) {
+    const q = query(collection(db, 'licenses'), where('clientEmail', '==', email));
+    const snap = await getDocs(q);
+    if (snap.empty) return null;
+    // If a client has multiple licenses, show the most recently issued one.
+    let latest = null;
+    snap.forEach((d) => {
+      const data = d.data();
+      if (!latest || new Date(data.issuedAt) > new Date(latest.issuedAt)) latest = data;
+    });
+    return latest;
   }
 
   function renderResult(lic) {
@@ -247,46 +303,119 @@
       });
     }
 
-    loginView.classList.add('hidden');
-    resultView.classList.remove('hidden');
+    showOnly(resultView);
   }
+
+  // ---- Sign in (returning clients) ----
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginBtn = document.getElementById('loginBtn');
 
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     loginError.classList.add('hidden');
-    const email = document.getElementById('emailInput').value.trim().toLowerCase();
-    const key = document.getElementById('keyInput').value.trim().toUpperCase();
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
 
     loginBtn.disabled = true;
-    loginBtn.textContent = 'Checking…';
+    loginBtn.textContent = 'Signing in…';
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged below handles loading + showing the license.
+    } catch (err) {
+      loginError.textContent = 'Incorrect email or password.';
+      loginError.classList.remove('hidden');
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Sign In';
+    }
+  });
+
+  document.getElementById('forgotBtn').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    if (!email) {
+      loginError.textContent = 'Enter your email above first, then click "Forgot password?".';
+      loginError.classList.remove('hidden');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      loginError.classList.add('hidden');
+      alert('Password reset link sent to ' + email + ' — check your inbox.');
+    } catch (err) {
+      loginError.textContent = 'Could not send reset email — check the address and try again.';
+      loginError.classList.remove('hidden');
+    }
+  });
+
+  // ---- Activate (first time, license key required once) ----
+  const activateForm = document.getElementById('activateForm');
+  const activateError = document.getElementById('activateError');
+  const activateBtn = document.getElementById('activateBtn');
+
+  activateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    activateError.classList.add('hidden');
+    const email = document.getElementById('activateEmail').value.trim().toLowerCase();
+    const key = document.getElementById('activateKey').value.trim().toUpperCase();
+    const password = document.getElementById('activatePassword').value;
+
+    activateBtn.disabled = true;
+    activateBtn.textContent = 'Verifying license…';
     try {
       const snap = await getDoc(doc(db, 'licenses', key));
       if (!snap.exists()) {
-        loginError.textContent = 'No license found with that key. Double-check it and try again.';
-        loginError.classList.remove('hidden');
+        activateError.textContent = 'No license found with that key. Double-check it and try again.';
+        activateError.classList.remove('hidden');
         return;
       }
       const lic = snap.data();
       if ((lic.clientEmail || '').toLowerCase() !== email) {
-        loginError.textContent = 'That email does not match this license key.';
+        activateError.textContent = 'That email does not match this license key.';
+        activateError.classList.remove('hidden');
+        return;
+      }
+
+      activateBtn.textContent = 'Creating your account…';
+      await createUserWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged below handles loading + showing the license.
+    } catch (err) {
+      if (err.code === 'auth/email-already-in-use') {
+        activateError.textContent = 'An account already exists for this email — use "Sign In" instead.';
+      } else if (err.code === 'auth/weak-password') {
+        activateError.textContent = 'Password is too weak — use at least 6 characters.';
+      } else {
+        activateError.textContent = 'Something went wrong — please try again.';
+        console.error(err);
+      }
+      activateError.classList.remove('hidden');
+    } finally {
+      activateBtn.disabled = false;
+      activateBtn.textContent = 'Activate & Set Password';
+    }
+  });
+
+  // ---- Auth state → load and show the client's license ----
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+    try {
+      const lic = await findLicenseByEmail(user.email.toLowerCase());
+      if (!lic) {
+        loginError.textContent = 'Signed in, but no license is linked to this email — contact us.';
         loginError.classList.remove('hidden');
+        await signOut(auth);
         return;
       }
       renderResult(lic);
     } catch (err) {
-      loginError.textContent = 'Something went wrong — please try again.';
-      loginError.classList.remove('hidden');
       console.error(err);
-    } finally {
-      loginBtn.disabled = false;
-      loginBtn.textContent = 'View My License';
     }
   });
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    resultView.classList.add('hidden');
-    loginView.classList.remove('hidden');
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await signOut(auth);
     loginForm.reset();
+    showOnly(loginView);
   });
 </script>
 </body>
