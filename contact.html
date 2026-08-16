@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — Ascent Advisors LLP</title>
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo-icon.png" alt="Ascent Advisors LLP" />
+      <span class="brand-text">ASCENT ADVISORS LLP</span>
+    </a>
+    <nav class="main-nav">
+      <a href="about.html">About Us</a>
+      <a href="services.html">Services</a>
+      <a href="industries.html">Industries</a>
+      <a href="technology.html">Technology</a>
+      <a href="client-login.html" class="client-link">Client Login</a>
+      <a href="contact.html" class="nav-cta current">Talk to an Advisor →</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap breadcrumb"><a href="index.html">Home</a> / Contact</div>
+
+<section style="padding-top:48px;">
+  <div class="wrap section-head" style="max-width:600px;">
+    <div class="eyebrow" style="justify-content:center;">Get in touch</div>
+    <h2>Let's Talk About Your Business</h2>
+    <p>Whether you need help with compliance, finance, tax, business decisions or growth, speak with our advisory team.</p>
+  </div>
+
+  <div class="wrap contact-grid">
+    <div class="contact-card">
+      <form id="enquiryForm">
+        <div class="field">
+          <label for="fName">Name</label>
+          <input type="text" id="fName" required />
+        </div>
+        <div class="field">
+          <label for="fCompany">Company</label>
+          <input type="text" id="fCompany" />
+        </div>
+        <div class="field">
+          <label for="fEmail">Email</label>
+          <input type="email" id="fEmail" required />
+        </div>
+        <div class="field">
+          <label for="fPhone">Phone</label>
+          <input type="tel" id="fPhone" />
+        </div>
+        <div class="field">
+          <label for="fService">Service Required</label>
+          <select id="fService">
+            <option>GST Advisory &amp; Compliance</option>
+            <option>GST Health Checkup</option>
+            <option>Business Advisory</option>
+            <option>CFO &amp; Virtual CFO Services</option>
+            <option>Income Tax Advisory &amp; Compliance</option>
+            <option>Finance &amp; MIS Advisory</option>
+            <option>Transaction &amp; Deal Advisory</option>
+            <option>Internal Audit &amp; Risk Advisory</option>
+            <option>Statutory / Tax Audit</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fMessage">Message</label>
+          <textarea id="fMessage" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" id="sendBtn">Send Enquiry</button>
+        <div id="formStatus" style="margin-top:12px; font-size:12.5px;"></div>
+      </form>
+    </div>
+
+    <div>
+      <div class="contact-info-item">
+        <div class="label">Phone</div>
+        <div class="value"><a href="tel:+919768071943">+91 97680 71943</a></div>
+      </div>
+      <div class="contact-info-item">
+        <div class="label">Email</div>
+        <div class="value"><a href="mailto:Ascent.advisorsllp@gmail.com">Ascent.advisorsllp@gmail.com</a></div>
+      </div>
+      <div class="contact-info-item">
+        <div class="label">Response Time</div>
+        <div class="value" style="font-size:14px; font-weight:600; color:var(--ink-soft);">We typically respond within one business day.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ASCENT ADVISORS LLP</div>
+        <p class="footer-tagline">Practical advice. Better decisions.<br />Sustainable growth.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="industries.html">Industries</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <a href="services.html#gst">GST Advisory</a>
+        <a href="services.html#business">Business Advisory</a>
+        <a href="services.html#cfo">CFO Services</a>
+        <a href="services.html#income-tax">Tax Advisory</a>
+        <a href="services.html#assurance">Assurance</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="tel:+919768071943">+91 97680 71943</a>
+        <a href="mailto:Ascent.advisorsllp@gmail.com">Ascent.advisorsllp@gmail.com</a>
+        <a href="technology.html">Technology &amp; Software</a>
+        <a href="client-login.html">Client Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Ascent Advisors LLP. All rights reserved.</span>
+      <span>Privacy Policy · Terms &amp; Conditions</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('enquiryForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = document.getElementById('fName').value;
+    const company = document.getElementById('fCompany').value;
+    const email = document.getElementById('fEmail').value;
+    const phone = document.getElementById('fPhone').value;
+    const service = document.getElementById('fService').value;
+    const message = document.getElementById('fMessage').value;
+
+    const body = `Name: ${name}\nCompany: ${company}\nEmail: ${email}\nPhone: ${phone}\nService: ${service}\n\n${message}`;
+    window.location.href = `mailto:Ascent.advisorsllp@gmail.com?subject=${encodeURIComponent('Enquiry: ' + service)}&body=${encodeURIComponent(body)}`;
+
+    document.getElementById('formStatus').textContent = 'Opening your email app to send this enquiry…';
+  });
+</script>
+
+</body>
+</html>

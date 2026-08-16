@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Technology — Ascent Advisors LLP</title>
+<link rel="stylesheet" href="assets/styles.css" />
+<style>
+  .software-card{
+    background:var(--white); border:1px solid var(--border); border-radius:16px;
+    padding:24px; box-shadow:var(--shadow);
+    display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center;
+  }
+  @media(max-width:700px){ .software-card{ grid-template-columns:1fr; text-align:left; } }
+  .sw-icon{ width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex:none; background:#eaf0ff; }
+  .sw-name{ font-size:16px; font-weight:700; color:var(--navy); }
+  .sw-tagline{ font-size:13px; color:var(--ink-soft); margin-top:3px; }
+  .sw-meta{ display:flex; gap:16px; margin-top:10px; flex-wrap:wrap; }
+  .sw-meta-label{ color:var(--ink-soft); display:block; text-transform:uppercase; letter-spacing:.04em; font-size:10px; font-weight:700; margin-bottom:2px; }
+  .sw-meta-value{ font-weight:700; color:var(--navy); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; }
+  .sw-download{
+    display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:9px;
+    font-size:13px; font-weight:700; white-space:nowrap; background:var(--blue); color:#fff !important;
+  }
+  .sw-download:hover{ background:var(--navy); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo-icon.png" alt="Ascent Advisors LLP" />
+      <span class="brand-text">ASCENT ADVISORS LLP</span>
+    </a>
+    <nav class="main-nav">
+      <a href="about.html">About Us</a>
+      <a href="services.html">Services</a>
+      <a href="industries.html">Industries</a>
+      <a href="technology.html" class="current">Technology</a>
+      <a href="client-login.html" class="client-link">Client Login</a>
+      <a href="contact.html" class="nav-cta">Talk to an Advisor →</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap breadcrumb"><a href="index.html">Home</a> / Technology</div>
+
+<section style="padding-top:48px; padding-bottom:56px;">
+  <div class="wrap" style="max-width:680px;">
+    <div class="eyebrow">Enabler, not identity</div>
+    <h2 style="font-size:clamp(26px,3.6vw,36px);">Technology That Strengthens Our Advisory</h2>
+    <p style="margin-top:16px; font-size:15.5px; color:var(--ink-soft); line-height:1.75;">
+      We use technology to improve the speed, accuracy and visibility of our advisory and compliance services. It supports how we work — it isn't what we sell.
+    </p>
+  </div>
+</section>
+
+<section style="background:var(--white); border-top:1px solid var(--border);">
+  <div class="wrap">
+    <div class="section-head left" style="max-width:600px;">
+      <h2 style="font-size:20px;">Where technology helps</h2>
+    </div>
+    <div class="card-grid" style="grid-template-columns:repeat(4,1fr);">
+      <div class="industry-card"><h3 style="font-size:14px;">GST reconciliation</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">Document management</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">Financial reporting</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">MIS automation</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">Compliance workflows</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">Data validation</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">Client reporting</h3></div>
+      <div class="industry-card"><h3 style="font-size:14px;">Bank statement processing</h3></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="max-width:820px;">
+    <div class="section-head left">
+      <div class="eyebrow">Built in-house</div>
+      <h2 style="font-size:22px;">Our Software</h2>
+      <p>Tools we've built to support our own advisory delivery, made available directly.</p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="software-card">
+        <div class="sw-icon"><img src="assets/logo-icon.png" alt="" style="width:28px;height:28px;object-fit:contain;" /></div>
+        <div>
+          <div class="sw-name">Ascent Compliance OS</div>
+          <div class="sw-tagline">Our technology-enabled compliance platform for efficient GST, tax, audit and financial workflows.</div>
+          <div class="sw-meta">
+            <div><span class="sw-meta-label">Version</span><span class="sw-meta-value">0.2.0</span></div>
+            <div><span class="sw-meta-label">Released</span><span class="sw-meta-value">17 Aug 2026</span></div>
+            <div><span class="sw-meta-label">Platform</span><span class="sw-meta-value">Windows</span></div>
+          </div>
+        </div>
+        <a class="sw-download" href="https://github.com/sc29082000-byte/Ascent-Advisors/releases/latest" target="_blank" rel="noopener">⬇ Download</a>
+      </div>
+
+      <div class="software-card">
+        <div class="sw-icon" style="background:#e6f5f4;">🧾</div>
+        <div>
+          <div class="sw-name">StatementIQ</div>
+          <div class="sw-tagline">Bank statement → Excel/Tally XML converter, plus AI-drafted financials — runs entirely in your browser.</div>
+          <div class="sw-meta">
+            <div><span class="sw-meta-label">Type</span><span class="sw-meta-value">Web app</span></div>
+          </div>
+        </div>
+        <a class="sw-download" href="https://sc29082000-byte.github.io/Bank.AI/" target="_blank" rel="noopener" style="background:var(--teal);">Open App →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>Let's Talk About Your Business</h2>
+      <p>Whether you need help with compliance, finance, tax, business decisions or growth, speak with our advisory team.</p>
+      <a class="btn btn-primary" href="contact.html">Book a Consultation →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ASCENT ADVISORS LLP</div>
+        <p class="footer-tagline">Practical advice. Better decisions.<br />Sustainable growth.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="industries.html">Industries</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <a href="services.html#gst">GST Advisory</a>
+        <a href="services.html#business">Business Advisory</a>
+        <a href="services.html#cfo">CFO Services</a>
+        <a href="services.html#income-tax">Tax Advisory</a>
+        <a href="services.html#assurance">Assurance</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="tel:+919768071943">+91 97680 71943</a>
+        <a href="mailto:Ascent.advisorsllp@gmail.com">Ascent.advisorsllp@gmail.com</a>
+        <a href="technology.html">Technology &amp; Software</a>
+        <a href="client-login.html">Client Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Ascent Advisors LLP. All rights reserved.</span>
+      <span>Privacy Policy · Terms &amp; Conditions</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
