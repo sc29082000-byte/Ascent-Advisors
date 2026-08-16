@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Client Login — Ascent Advisors LLP</title>
+<style>
+  :root{
+    --navy:#0f2747;
+    --blue:#1e5aa8;
+    --blue-tint:#eaf1fb;
+    --teal:#0d9488;
+    --teal-tint:#f0fdfa;
+    --paper:#f5f7fa;
+    --card:#ffffff;
+    --ink:#172033;
+    --ink-soft:#5b6b82;
+    --border:#d9e0e8;
+    --good:#1a7f5a;
+    --good-tint:#e6f5ee;
+    --warn:#b9770e;
+    --warn-tint:#fdf1de;
+    --bad:#b3261e;
+    --bad-tint:#fbe9e7;
+    --shadow: 0 1px 2px rgba(15,39,71,.06), 0 8px 24px -12px rgba(15,39,71,.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  a{ color:var(--blue); }
+  .hidden{ display:none !important; }
+
+  header{
+    border-bottom:1px solid var(--border);
+    background:#fff;
+  }
+  .header-inner{
+    max-width:1080px; margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand img{ height:30px; width:30px; object-fit:contain; }
+  .brand-text{ font-weight:800; font-size:14.5px; letter-spacing:-.01em; color:var(--navy); }
+  header nav a{ font-size:13px; font-weight:600; color:var(--ink-soft); text-decoration:none; }
+
+  .wrap{ max-width:520px; margin:0 auto; padding:64px 24px 80px; }
+
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:18px;
+    box-shadow:var(--shadow); padding:32px;
+  }
+  .card h1{ font-size:21px; font-weight:800; color:var(--navy); margin-bottom:6px; }
+  .card > p{ font-size:13.5px; color:var(--ink-soft); margin-bottom:24px; }
+
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:12.5px; font-weight:600; margin-bottom:5px; color:var(--ink-soft); }
+  .field input{
+    width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:9px;
+    font-size:14px; font-family:inherit; background:var(--paper); color:var(--ink);
+  }
+  .field input:focus{ outline:2px solid var(--blue); outline-offset:1px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    width:100%; background:var(--blue); color:#fff; border:none;
+    padding:11px 16px; border-radius:9px; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .btn:hover{ background:var(--navy); }
+  .btn:disabled{ opacity:.6; cursor:not-allowed; }
+  .error-msg{ color:var(--bad); font-size:12.5px; margin-top:10px; }
+
+  /* ---- Result view ---- */
+  .result-head{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;
+  }
+  .result-head h1{ font-size:19px; }
+  .logout-btn{
+    background:none; border:1px solid var(--border); border-radius:8px;
+    padding:7px 12px; font-size:12.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+  }
+  .logout-btn:hover{ background:var(--paper); }
+
+  .pill{
+    display:inline-block; font-size:11.5px; font-weight:700;
+    padding:4px 11px; border-radius:999px;
+  }
+  .pill.active{ background:var(--good-tint); color:var(--good); }
+  .pill.expiring{ background:var(--warn-tint); color:var(--warn); }
+  .pill.expired{ background:var(--bad-tint); color:var(--bad); }
+  .pill.revoked{ background:#eceef1; color:#667085; }
+
+  .detail-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px;
+    margin-top:20px; padding-top:20px; border-top:1px solid var(--border);
+  }
+  .detail-item-label{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:700;
+    color:var(--ink-soft); margin-bottom:4px;
+  }
+  .detail-item-value{ font-size:15px; font-weight:700; color:var(--ink); }
+
+  .devices-section{ margin-top:22px; padding-top:20px; border-top:1px solid var(--border); }
+  .devices-section h3{ font-size:13.5px; font-weight:700; margin-bottom:10px; }
+  .device-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 12px; border:1px solid var(--border); border-radius:9px; margin-bottom:8px;
+    font-size:13px;
+  }
+  .device-row:last-child{ margin-bottom:0; }
+  .device-empty{
+    font-size:13px; color:var(--ink-soft); padding:14px; text-align:center;
+    background:var(--paper); border-radius:9px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo-icon.png" alt="Ascent Advisors LLP" />
+      <span class="brand-text">ASCENT ADVISORS LLP</span>
+    </a>
+    <nav><a href="index.html">← Back to site</a></nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ LOGIN ============ -->
+  <div id="loginView" class="card">
+    <h1>Client Login</h1>
+    <p>Enter the email and license key you received to view your license details.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="emailInput">Email</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" required autocomplete="email" autofocus />
+      </div>
+      <div class="field">
+        <label for="keyInput">License Key</label>
+        <input type="text" id="keyInput" placeholder="ASC-XXXX-XXXX-XXXX-XXXX" required style="text-transform:uppercase;" />
+      </div>
+      <button type="submit" class="btn" id="loginBtn">View My License</button>
+      <div class="error-msg hidden" id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- ============ RESULT ============ -->
+  <div id="resultView" class="card hidden">
+    <div class="result-head">
+      <h1 id="resultClientName"></h1>
+      <button type="button" class="logout-btn" id="logoutBtn">Log out</button>
+    </div>
+    <span class="pill" id="resultStatusPill"></span>
+
+    <div class="detail-grid">
+      <div>
+        <div class="detail-item-label">Date of Purchase</div>
+        <div class="detail-item-value" id="resultIssuedAt"></div>
+      </div>
+      <div>
+        <div class="detail-item-label">Expiry Date</div>
+        <div class="detail-item-value" id="resultExpiryAt"></div>
+      </div>
+      <div>
+        <div class="detail-item-label">Amount Paid</div>
+        <div class="detail-item-value" id="resultAmount"></div>
+      </div>
+      <div>
+        <div class="detail-item-label">Devices Allowed</div>
+        <div class="detail-item-value" id="resultMaxDevices"></div>
+      </div>
+    </div>
+
+    <div class="devices-section">
+      <h3>Connected Devices</h3>
+      <div id="devicesList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import {
+    getFirestore, doc, getDoc
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDebIOoxzQZi8UbNoBvHISHwUzmw3xYj4o",
+    authDomain: "ascent-compliance-os.firebaseapp.com",
+    projectId: "ascent-compliance-os",
+    storageBucket: "ascent-compliance-os.firebasestorage.app",
+    messagingSenderId: "287218911507",
+    appId: "1:287218911507:web:6e976bf9044e211ad3f2e6",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const loginView = document.getElementById('loginView');
+  const resultView = document.getElementById('resultView');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginBtn = document.getElementById('loginBtn');
+
+  function fmtDate(iso) {
+    return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function computedStatus(lic) {
+    if (lic.status === 'revoked') return 'revoked';
+    const now = Date.now();
+    const expiry = new Date(lic.expiryAt).getTime();
+    if (expiry < now) return 'expired';
+    if (expiry - now < 7 * 24 * 60 * 60 * 1000) return 'expiring';
+    return 'active';
+  }
+
+  function renderResult(lic) {
+    document.getElementById('resultClientName').textContent = lic.clientName;
+    const status = computedStatus(lic);
+    const pill = document.getElementById('resultStatusPill');
+    pill.className = `pill ${status}`;
+    pill.textContent = status === 'expiring' ? 'expiring soon' : status;
+
+    document.getElementById('resultIssuedAt').textContent = fmtDate(lic.issuedAt);
+    document.getElementById('resultExpiryAt').textContent = fmtDate(lic.expiryAt);
+    document.getElementById('resultAmount').textContent = lic.amount ? `₹${lic.amount.toLocaleString('en-IN')}` : 'Not recorded';
+    document.getElementById('resultMaxDevices').textContent = lic.maxDevices || 1;
+
+    const devices = lic.devices || [];
+    const devicesList = document.getElementById('devicesList');
+    devicesList.innerHTML = '';
+    if (devices.length === 0) {
+      devicesList.innerHTML = '<div class="device-empty">No devices activated yet.</div>';
+    } else {
+      devices.forEach((_, i) => {
+        const row = document.createElement('div');
+        row.className = 'device-row';
+        row.innerHTML = `<span>Device ${i + 1}</span><span class="pill active">activated</span>`;
+        devicesList.appendChild(row);
+      });
+    }
+
+    loginView.classList.add('hidden');
+    resultView.classList.remove('hidden');
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.classList.add('hidden');
+    const email = document.getElementById('emailInput').value.trim().toLowerCase();
+    const key = document.getElementById('keyInput').value.trim().toUpperCase();
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Checking…';
+    try {
+      const snap = await getDoc(doc(db, 'licenses', key));
+      if (!snap.exists()) {
+        loginError.textContent = 'No license found with that key. Double-check it and try again.';
+        loginError.classList.remove('hidden');
+        return;
+      }
+      const lic = snap.data();
+      if ((lic.clientEmail || '').toLowerCase() !== email) {
+        loginError.textContent = 'That email does not match this license key.';
+        loginError.classList.remove('hidden');
+        return;
+      }
+      renderResult(lic);
+    } catch (err) {
+      loginError.textContent = 'Something went wrong — please try again.';
+      loginError.classList.remove('hidden');
+      console.error(err);
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'View My License';
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    resultView.classList.add('hidden');
+    loginView.classList.remove('hidden');
+    loginForm.reset();
+  });
+</script>
+</body>
+</html>
